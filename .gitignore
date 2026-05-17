@@ -1,0 +1,56 @@
+# ─── Secretos — NUNCA versionar ──────────────────────────────────────────────
+.env
+.env.local
+.env.production
+*.pem
+*.key
+# Google Services (Firebase / Push Notifications / Play Store)
+google-services.json
+GoogleService-Info.plist
+google-service-account.json
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+.eggs/
+*.egg
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ─── Media local (comprobantes) ───────────────────────────────────────────────
+media/
+*.jpg
+*.jpeg
+*.png
+*.pdf
+
+# ─── IDEs ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Railway / Deploy ─────────────────────────────────────────────────────────
+.railway/
+
+# ─── Playwright ───────────────────────────────────────────────────────────────
+playwright-report/
+test-results/

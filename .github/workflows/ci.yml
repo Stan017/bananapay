@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── 1. Tests Python (pytest) ─────────────────────────────────────────────────
+  backend:
+    name: Backend — pytest
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+
+    env:
+      APP_ENV: development
+      SECRET_KEY: ci-secret-key-not-used-in-production
+      SUPABASE_URL: https://placeholder.supabase.co
+      SUPABASE_ANON_KEY: placeholder
+      SUPABASE_SERVICE_KEY: placeholder
+      REDIS_URL: redis://localhost:6379
+      WHATSAPP_TOKEN: placeholder
+      WHATSAPP_PHONE_NUMBER_ID: "123456"
+      WHATSAPP_BUSINESS_ACCOUNT_ID: "789012"
+      WHATSAPP_VERIFY_TOKEN: ci-verify
+      WHATSAPP_APP_SECRET: ci-app-secret
+      WALLET_ENCRYPTION_KEY: ${{ secrets.CI_WALLET_ENCRYPTION_KEY }}
+      ANTHROPIC_API_KEY: placeholder
+      TRONGRID_API_KEY: placeholder
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pytest
+        run: pytest --tb=short -q
+
+  # ── 2. Tests React Native (Jest) ─────────────────────────────────────────────
+  mobile:
+    name: Mobile — Jest
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: BananaPayApp
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: BananaPayApp/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Jest
+        run: npm test -- --ci --passWithNoTests
+
+  # ── 3. Tests E2E panel admin (Playwright) ────────────────────────────────────
+  e2e:
+    name: Panel — Playwright
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Install http-server
+        run: npm install -g http-server
+
+      - name: Run Playwright tests
+        run: npx playwright test

@@ -1,0 +1,12 @@
+# Railway deployment config — BananaPay API (web service)
+# El worker (python worker.py) se configura como servicio separado en el dashboard.
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

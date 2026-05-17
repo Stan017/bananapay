@@ -1,0 +1,47 @@
+# ─── BananaPay — dependencias de producción ───────────────────────────────────
+# Sincronizado con pyproject.toml — Railway instala esto en build
+
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.6
+starlette>=0.37.0
+slowapi>=0.1.9
+
+# Auth & seguridad
+PyJWT>=2.9.0
+bcrypt>=4.2.0
+cryptography>=42.0.0
+
+# Config
+pydantic>=2.11.7
+pydantic-settings>=2.5.0
+python-dotenv>=1.0.0
+
+# Base de datos
+supabase>=2.29.0
+
+# Cache / sesiones
+redis[asyncio]>=5.1.0
+
+# HTTP
+httpx>=0.27.0
+aiohttp>=3.13.0
+requests>=2.32.0
+
+# Blockchain (USDT TRC-20)
+tronpy>=0.4.0
+
+# QR codes & imágenes
+qrcode[pil]>=8.0.0
+Pillow>=10.0.0
+pyzbar>=0.1.9
+
+# IA — Claude Vision para verificación de comprobantes
+anthropic>=0.40.0
+
+# Monitoring
+sentry-sdk[fastapi]>=2.16.0
+
+# Utils
+anyio>=4.12.0
+watchfiles>=1.1.0

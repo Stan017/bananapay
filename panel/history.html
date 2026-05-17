@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historial — BananaPay Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-logo">🍌 BananaPay</span>
+  <span class="header-user" id="operator-name"></span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️</button>
+    <button class="logout-btn" onclick="logout()">Salir</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="dashboard.html">📊 Dashboard</a>
+  <a href="deposits.html">📥 Depositos</a>
+  <a href="withdrawals.html">📤 Retiros</a>
+  <a href="users.html">👥 Usuarios</a>
+  <a href="history.html" class="active">📋 Historial</a>
+  <a href="support.html">🆘 Soporte</a>
+  <a href="fraud.html">🚨 Fraude</a>
+</nav>
+
+<div class="page page--wide">
+  <p class="section-title">Historial de operaciones</p>
+
+  <div class="hist-tabs" style="margin-bottom:16px">
+    <button class="hist-tab active" onclick="switchSection('deposits',          this)">Depositos USD</button>
+    <button class="hist-tab"        onclick="switchSection('crypto-deposits',   this)">Depositos Cripto</button>
+    <button class="hist-tab"        onclick="switchSection('withdrawals',       this)">Retiros USD</button>
+    <button class="hist-tab"        onclick="switchSection('crypto-withdrawals',this)">Retiros Cripto</button>
+    <button class="hist-tab"        onclick="switchSection('transfers',         this)">Transferencias</button>
+    <button class="hist-tab"        onclick="switchSection('fraud-alerts',      this)">Fraude</button>
+  </div>
+
+  <div id="status-filter" class="filter-row">
+    <span class="filter-label">Estado:</span>
+    <button class="filter-btn active" onclick="setFilter('all',      this)">Todos</button>
+    <button class="filter-btn"        onclick="setFilter('pending',  this)">Pendiente</button>
+    <button class="filter-btn"        onclick="setFilter('approved', this)">Aprobado</button>
+    <button class="filter-btn"        onclick="setFilter('rejected', this)">Rechazado</button>
+  </div>
+
+  <div id="history-table-wrap">
+    <p class="empty">Cargando...</p>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+<script>
+  const op = JSON.parse(localStorage.getItem("bp_operator") || "{}");
+  const nameEl = document.getElementById("operator-name");
+  if (nameEl) nameEl.textContent = op.name || "";
+  initTheme();
+  loadHistory();
+</script>
+</body>
+</html>

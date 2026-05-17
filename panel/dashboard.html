@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — BananaPay Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-logo">🍌 BananaPay</span>
+  <span class="header-user" id="operator-name"></span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️</button>
+    <button class="logout-btn" onclick="logout()">Salir</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="dashboard.html" class="active">📊 Dashboard</a>
+  <a href="deposits.html">📥 Depósitos</a>
+  <a href="withdrawals.html">📤 Retiros</a>
+  <a href="users.html">👥 Usuarios</a>
+  <a href="history.html">📋 Historial</a>
+  <a href="support.html">🆘 Soporte</a>
+  <a href="fraud.html">🚨 Fraude</a>
+</nav>
+
+<div class="page">
+
+  <div class="alert-banner hidden" id="pending-alert"></div>
+
+  <p class="section-title">Resumen del día</p>
+  <div class="metrics-grid">
+    <div class="metric-card highlight">
+      <div class="metric-label">Float total</div>
+      <div class="metric-value" id="float-total">—</div>
+      <div class="metric-sub">Fiat + USDT + USDC</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Float Fiat 🏦</div>
+      <div class="metric-value" id="float-fiat">—</div>
+      <div class="metric-sub">Depósitos bancarios</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Float USDT 🪙</div>
+      <div class="metric-value green" id="float-usdt">—</div>
+      <div class="metric-sub">Depósitos TRC-20</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Float USDC 🔵</div>
+      <div class="metric-value" style="color:#6366f1" id="float-usdc">—</div>
+      <div class="metric-sub">Depósitos TRC-20</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Volumen hoy</div>
+      <div class="metric-value" id="volume-today">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Fees hoy</div>
+      <div class="metric-value green" id="fees-today">—</div>
+      <div class="metric-sub" id="fees-month"></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Usuarios</div>
+      <div class="metric-value" id="users-total">—</div>
+      <div class="metric-sub" id="users-today"></div>
+    </div>
+    <div class="metric-card alert">
+      <div class="metric-label">Depósitos pendientes</div>
+      <div class="metric-value" id="dep-pending">—</div>
+      <div class="metric-sub"><a href="deposits.html" style="color:inherit">Ver →</a></div>
+    </div>
+    <div class="metric-card alert">
+      <div class="metric-label">Retiros pendientes</div>
+      <div class="metric-value" id="wd-pending">—</div>
+      <div class="metric-sub"><a href="withdrawals.html" style="color:inherit">Ver →</a></div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="analytics-toolbar">
+    <p class="section-title" style="margin:0">📈 Analytics</p>
+    <div class="analytics-period">
+      <button class="period-btn active" onclick="setPeriod(7,  this)">7d</button>
+      <button class="period-btn"        onclick="setPeriod(30, this)">30d</button>
+      <button class="period-btn"        onclick="setPeriod(90, this)">90d</button>
+    </div>
+  </div>
+
+  <!-- Fila 1: Volumen + Aprobaciones -->
+  <div class="charts-row">
+    <div class="chart-card chart-card--wide">
+      <p class="chart-title">Volumen diario (USD)</p>
+      <canvas id="chart-volume" height="110"></canvas>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Depósitos — tasa de resolución</p>
+      <canvas id="chart-rates" height="160"></canvas>
+      <div id="rates-legend" class="rates-legend"></div>
+    </div>
+  </div>
+
+  <!-- Fila 2: Bancos + Usuarios nuevos -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <p class="chart-title">Depósitos por banco</p>
+      <canvas id="chart-banks" height="180"></canvas>
+    </div>
+    <div class="chart-card chart-card--wide">
+      <p class="chart-title">Usuarios nuevos por día</p>
+      <canvas id="chart-users" height="110"></canvas>
+    </div>
+  </div>
+
+  <!-- Métrica: tiempo promedio aprobación -->
+  <div id="approval-time-wrap" class="approval-time hidden">
+    ⏱️ Tiempo promedio de aprobación de depósitos: <strong id="approval-time-val">—</strong>
+  </div>
+
+  <p class="section-title">P&L — Últimos 14 días</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Ingresos</th>
+          <th>Gastos</th>
+          <th>Neto</th>
+        </tr>
+      </thead>
+      <tbody id="pnl-tbody">
+        <tr><td colspan="4" class="empty">Cargando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">Registrar gasto</p>
+  <div class="card">
+    <div class="card-body">
+      <form onsubmit="handleExpense(event)">
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="exp-category">
+            <option value="hosting">Hosting (Railway)</option>
+            <option value="database">Base de datos (Supabase)</option>
+            <option value="whatsapp">WhatsApp API</option>
+            <option value="domain">Dominio</option>
+            <option value="redis">Redis (Upstash)</option>
+            <option value="other">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input type="text" id="exp-description" placeholder="ej: Railway abril 2026" required />
+        </div>
+        <div class="form-group">
+          <label>Monto (USD)</label>
+          <input type="number" id="exp-amount" step="0.01" min="0.01" placeholder="0.00" required />
+        </div>
+        <div class="form-group">
+          <label>Fecha (opcional)</label>
+          <input type="date" id="exp-date" />
+        </div>
+        <button class="btn btn-primary btn-sm" type="submit">Registrar gasto</button>
+      </form>
+    </div>
+  </div>
+
+  <p class="section-title">Gastos del mes</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Monto</th></tr>
+      </thead>
+      <tbody id="expenses-tbody">
+        <tr><td colspan="4" class="empty">Cargando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+<script>initTheme(); loadDashboard(); loadExpenses(); loadAnalytics(30); startPolling();</script>
+</body>
+</html>

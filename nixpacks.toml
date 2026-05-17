@@ -1,0 +1,11 @@
+# Railway usa Nixpacks para buildear el proyecto.
+# Especificamos Python 3.11 (stable, soportado por todas las dependencias).
+
+[phases.setup]
+nixPkgs = ["python311", "libzbar"]   # libzbar para pyzbar (lector QR)
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
