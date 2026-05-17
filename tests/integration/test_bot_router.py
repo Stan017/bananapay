@@ -142,6 +142,7 @@ class TestConsultasAutenticado:
             patch("app.core.command_router.session_manager.set_state", new=AsyncMock()),
             patch("app.modules.auth.register.get_user_by_phone", new=AsyncMock(return_value=TEST_USER)),
             patch("app.modules.fiat.wallet.get_balances", new=AsyncMock(return_value=mock_balances)),
+            patch("app.modules.fiat.wallet.get_history",  new=AsyncMock(return_value=[])),
         ):
             resp = await route(TEST_PHONE, "saldo", parsed(Intent.BALANCE))
 
@@ -158,6 +159,7 @@ class TestConsultasAutenticado:
             patch("app.core.command_router.session_manager.set_state", new=AsyncMock()),
             patch("app.modules.auth.register.get_user_by_phone", new=AsyncMock(return_value=TEST_USER)),
             patch("app.modules.fiat.wallet.get_balances", new=AsyncMock(return_value=mock_balances)),
+            patch("app.modules.fiat.wallet.get_history",  new=AsyncMock(return_value=[])),
         ):
             resp = await route(TEST_PHONE, "saldo", parsed(Intent.BALANCE))
 
@@ -198,11 +200,13 @@ class TestTransferencia:
 
     async def test_transfer_sin_datos_pide_moneda(self):
         """'enviar' sin destinatario ni monto debe preguntar en qué moneda."""
+        mock_balances = {"fiat": Decimal("100.00"), "usdt": Decimal("0"), "usdc": Decimal("0"), "total": Decimal("100.00")}
         with (
             patch("app.core.command_router.session_manager.get",
                   new=AsyncMock(return_value=self._auth_session())),
             patch("app.core.command_router.session_manager.set_state", new=AsyncMock()),
             patch("app.modules.auth.register.get_user_by_phone", new=AsyncMock(return_value=TEST_USER)),
+            patch("app.modules.fiat.wallet.get_balances",         new=AsyncMock(return_value=mock_balances)),
         ):
             resp = await route(TEST_PHONE, "enviar", parsed(Intent.TRANSFER))
 

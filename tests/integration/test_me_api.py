@@ -50,9 +50,9 @@ class TestBalance:
         assert data["fiat"]  == pytest.approx(30.00)
         assert data["usdt"]  == pytest.approx(85.50)
 
-    async def test_balance_sin_token_retorna_403(self, client):
+    async def test_balance_sin_token_retorna_401(self, client):
         resp = await client.get("/app/me/balance")
-        assert resp.status_code == 403
+        assert resp.status_code == 401
 
     async def test_balance_token_invalido_retorna_401(self, client):
         resp = await client.get(
@@ -88,9 +88,9 @@ class TestProfile:
         assert "pin_hash" not in resp.text
         assert "$2b$"     not in resp.text
 
-    async def test_profile_sin_token_retorna_403(self, client):
+    async def test_profile_sin_token_retorna_401(self, client):
         resp = await client.get("/app/me/profile")
-        assert resp.status_code == 403
+        assert resp.status_code == 401
 
 
 class TestHistory:
@@ -156,9 +156,9 @@ class TestHistory:
         called_limit = mock_hist.call_args[1].get("limit") or mock_hist.call_args[0][1]
         assert called_limit <= 50
 
-    async def test_history_sin_token_retorna_403(self, client):
+    async def test_history_sin_token_retorna_401(self, client):
         resp = await client.get("/app/me/history")
-        assert resp.status_code == 403
+        assert resp.status_code == 401
 
     async def test_history_vacio_retorna_lista_vacia(self, client, auth_headers):
         with patch("app.api.app.me.get_history", new=AsyncMock(return_value=[])):
