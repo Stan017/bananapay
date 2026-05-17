@@ -2,10 +2,7 @@
 # Especificamos Python 3.11 (stable, soportado por todas las dependencias).
 
 [phases.setup]
-nixPkgs = ["zbar"]   # zbar para pyzbar (lector QR) — Python lo detecta nixpacks solo
-
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
+aptPkgs = ["libzbar0", "libzbar-dev"]   # zbar para pyzbar — apt en imagen Ubuntu de Railway
 
 [start]
 cmd = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
