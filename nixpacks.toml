@@ -1,8 +1,13 @@
 # Railway usa Nixpacks para buildear el proyecto.
-# Especificamos Python 3.11 (stable, soportado por todas las dependencias).
+# Forzamos Python — sin esto nixpacks elige Node.js por el package.json de Playwright.
+
+providers = ["python"]
 
 [phases.setup]
 aptPkgs = ["libzbar0", "libzbar-dev"]   # zbar para pyzbar — apt en imagen Ubuntu de Railway
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
 
 [start]
 cmd = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
