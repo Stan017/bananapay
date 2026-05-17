@@ -29,7 +29,7 @@ jobs:
       WHATSAPP_BUSINESS_ACCOUNT_ID: "789012"
       WHATSAPP_VERIFY_TOKEN: ci-verify
       WHATSAPP_APP_SECRET: ci-app-secret
-      WALLET_ENCRYPTION_KEY: ${{ secrets.CI_WALLET_ENCRYPTION_KEY }}
+      WALLET_ENCRYPTION_KEY: KswSrkxKDULb-Njp-K5xkAAtzr3jL-uDWvxqaFfoeJI=
       ANTHROPIC_API_KEY: placeholder
       TRONGRID_API_KEY: placeholder
 
@@ -42,7 +42,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Run pytest
         run: pytest --tb=short -q
