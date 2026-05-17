@@ -2,7 +2,7 @@
 # Especificamos Python 3.11 (stable, soportado por todas las dependencias).
 
 [phases.setup]
-nixPkgs = ["python311", "libzbar"]   # libzbar para pyzbar (lector QR)
+nixPkgs = ["python311", "zbar"]   # zbar para pyzbar (lector QR)
 
 [phases.install]
 cmds = ["pip install -r requirements.txt"]
