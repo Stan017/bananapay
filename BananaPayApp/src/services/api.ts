@@ -71,3 +71,5 @@ export const withdrawCrypto = (body: {
 
 export const updatePushToken = (token: string) =>
   api.patch("/app/me/push-token", { token }).then((r) => r.data);
+
+export default api;

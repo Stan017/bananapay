@@ -68,7 +68,7 @@ export default function RootLayout() {
         if (bioEnabled && bioAvailable) {
           setBiometricPending(true);
         } else {
-          setAuth(token, { id: "", name: "", phone: "" });
+          setAuth(token, { id: "", name: "", phone: "", cedula: "" });
           // Registrar push token después de restaurar sesión
           registerForPushNotifications().catch(() => {});
         }
