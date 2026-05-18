@@ -3,6 +3,8 @@ Handlers de transferencias P2P entre usuarios BananaPay.
 Soporta USD, USDT y USDC.
 """
 
+from decimal import Decimal
+
 from app.core.session import ConversationState, session_manager
 from app.utils.logger import get_logger
 
@@ -162,35 +164,34 @@ async def _handle_transfer_amount(phone: str, text: str, session: dict) -> str:
                 "(con o sin el +593)"
             )
 
-        existing_amount = ctx.get("transfer_amount", "")
-        if not existing_amount:
-            await session_manager.set_state(
-                phone,
-                ConversationState.AWAITING_TRANSFER_AMOUNT,
-                context={
-                    "awaiting_field": "amount",
-                    "transfer_recipient": recipient,
-                    "transfer_raw_recipient": raw_number,
-                    "transfer_currency": currency,
-                    "transfer_pin_attempts": 0,
-                },
+        # Buscar nombre del destinatario para mostrar preview
+        from app.modules.auth.register import get_user_by_phone as _get_recip
+        recip_user = await _get_recip(recipient)
+        if not recip_user:
+            return (
+                "❌ Ese número no tiene cuenta en BananaPay.\n\n"
+                "¿Quieres enviar a otro número? Escríbelo:"
             )
-            return f"{_icon(currency)} ¿Cuánto {currency} quieres enviar a *{raw_number}*?"
+
+        recip_name  = _short_name(recip_user["name"])
+        existing_amount = ctx.get("transfer_amount", "")
 
         await session_manager.set_state(
             phone,
-            ConversationState.AWAITING_TRANSFER_PIN,
+            ConversationState.AWAITING_TRANSFER_RECIPIENT_CONFIRM,
             context={
-                "transfer_recipient": recipient,
+                "transfer_recipient":     recipient,
                 "transfer_raw_recipient": raw_number,
-                "transfer_amount": existing_amount,
-                "transfer_currency": currency,
-                "transfer_pin_attempts": 0,
+                "transfer_currency":      currency,
+                "transfer_amount":        existing_amount,
+                "transfer_recipient_name": recip_user["name"],
+                "transfer_pin_attempts":  0,
             },
         )
         return (
-            f"💸 *Enviar {existing_amount} {currency}* a *{raw_number}*\n\n"
-            "🔐 Ingresa tu PIN para confirmar:"
+            f"👤 *¿Envías a {recip_name}?*\n\n"
+            f"Número: {raw_number}\n\n"
+            "Responde *SI* para continuar o *NO* para cambiar el número."
         )
 
     # Ingresando monto
@@ -305,6 +306,59 @@ async def _handle_transfer_pin(phone: str, text: str, session: dict) -> object:
         f"✅ *¡Enviado!*\n\n"
         f"{icon} *{_fmt(amount, currency)}* a *{raw}*\n\n"
         "Toca *Menú* para seguir o *Salir* para cerrar tu sesión. 🍌"
+    )
+
+
+async def _handle_transfer_recipient_confirm(phone: str, text: str, session: dict) -> str:
+    """El usuario confirma o rechaza el destinatario mostrado."""
+    import re as _re
+    ctx      = session.get("context", {})
+    currency = ctx.get("transfer_currency", "USD")
+    raw      = ctx.get("transfer_raw_recipient", "")
+    recip_name = _short_name(ctx.get("transfer_recipient_name", ""))
+
+    yes = bool(_re.search(r"\b(si|sí|yes|ok|dale|confirmo|correcto|claro|va)\b", text, _re.I))
+    no  = bool(_re.search(r"\b(no|nope|cancelar|otro|cambiar|equivocado|error)\b", text, _re.I))
+
+    if no:
+        await session_manager.set_state(
+            phone,
+            ConversationState.AWAITING_TRANSFER_AMOUNT,
+            context={"awaiting_field": "phone", "transfer_currency": currency,
+                     "transfer_amount": ctx.get("transfer_amount", "")},
+        )
+        return f"{_icon(currency)} *¿A qué número quieres enviar?*\n\nEscríbelo así: *0991234567*"
+
+    if not yes:
+        return (
+            f"👤 *¿Confirmas que envías a {recip_name}?*\n\n"
+            "Responde *SI* para continuar o *NO* para cambiar el número."
+        )
+
+    existing_amount = ctx.get("transfer_amount", "")
+    if not existing_amount:
+        await session_manager.set_state(
+            phone,
+            ConversationState.AWAITING_TRANSFER_AMOUNT,
+            context={
+                "awaiting_field":          "amount",
+                "transfer_recipient":      ctx.get("transfer_recipient"),
+                "transfer_raw_recipient":  raw,
+                "transfer_recipient_name": ctx.get("transfer_recipient_name"),
+                "transfer_currency":       currency,
+                "transfer_pin_attempts":   0,
+            },
+        )
+        return f"{_icon(currency)} ¿Cuánto {currency} quieres enviar a *{recip_name}*?"
+
+    await session_manager.set_state(
+        phone,
+        ConversationState.AWAITING_TRANSFER_PIN,
+        context={**ctx, "transfer_pin_attempts": 0},
+    )
+    return (
+        f"💸 *Enviar {_fmt(Decimal(existing_amount), currency)}* a *{recip_name}*\n\n"
+        "🔐 Ingresa tu PIN para confirmar:"
     )
 
 

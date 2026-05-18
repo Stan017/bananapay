@@ -36,8 +36,15 @@ from app.core.routers.onboarding import (
 from app.core.routers.transfer import (
     _handle_transfer_start,
     _handle_transfer_amount,
+    _handle_transfer_recipient_confirm,
     _handle_transfer_pin,
     _handle_transfer_confirm,
+)
+from app.core.routers.recovery import (
+    handle_recovery_start,
+    handle_recovery_cedula,
+    handle_recovery_birthdate,
+    handle_recovery_pin,
 )
 from app.core.routers.deposit import (
     _handle_deposit_start,
@@ -155,13 +162,18 @@ async def route(phone: str, text: str, parsed: ParsedIntent) -> str:
     if (state == ConversationState.IDLE or not state) and not is_in_registration:
         existing_user = await get_user_by_phone(phone)
         if not existing_user:
+            # Antes de arrancar registro, verificar si el intent es recuperar cuenta
+            if parsed.intent == Intent.RECOVERY:
+                return await handle_recovery_start(phone)
+
             await session_manager.set_state(phone, ConversationState.AWAITING_NAME)
             return (
                 "¡Hola! 🍌 Soy *BananaPay*, tu billetera digital por WhatsApp.\n\n"
                 "Envía y recibe plata, retira a tu banco — todo sin salir de WhatsApp.\n\n"
                 "Para empezar necesito tu nombre completo.\n"
                 "Escribe tus *dos nombres y dos apellidos*:\n"
-                "Ejemplo: _Juan Carlos Pérez López_"
+                "Ejemplo: _Juan Carlos Pérez López_\n\n"
+                "_¿Ya tienes cuenta y cambiaste de número? Escribe *recuperar cuenta*._"
             )
         await session_manager.set_state(phone, ConversationState.AWAITING_REAUTH_CEDULA)
         return (
@@ -185,9 +197,15 @@ async def route(phone: str, text: str, parsed: ParsedIntent) -> str:
     if state == ConversationState.AWAITING_CUSTODY_MODE:   return await _handle_custody_mode(phone, text, session)
 
     # Transferencias
-    if state == ConversationState.AWAITING_TRANSFER_AMOUNT:  return await _handle_transfer_amount(phone, text, session)
-    if state == ConversationState.AWAITING_TRANSFER_PIN:     return await _handle_transfer_pin(phone, text, session)
-    if state == ConversationState.AWAITING_TRANSFER_CONFIRM: return await _handle_transfer_confirm(phone, text, session)
+    if state == ConversationState.AWAITING_TRANSFER_AMOUNT:             return await _handle_transfer_amount(phone, text, session)
+    if state == ConversationState.AWAITING_TRANSFER_RECIPIENT_CONFIRM:  return await _handle_transfer_recipient_confirm(phone, text, session)
+    if state == ConversationState.AWAITING_TRANSFER_PIN:                return await _handle_transfer_pin(phone, text, session)
+    if state == ConversationState.AWAITING_TRANSFER_CONFIRM:            return await _handle_transfer_confirm(phone, text, session)
+
+    # Recuperación de cuenta
+    if state == ConversationState.AWAITING_RECOVERY_CEDULA:    return await handle_recovery_cedula(phone, text, session)
+    if state == ConversationState.AWAITING_RECOVERY_BIRTHDATE: return await handle_recovery_birthdate(phone, text, session)
+    if state == ConversationState.AWAITING_RECOVERY_PIN:       return await handle_recovery_pin(phone, text, session)
 
     # Retiro USDT
     if state == ConversationState.AWAITING_USDT_WITHDRAW_AMOUNT:  return await _handle_usdt_withdraw_amount(phone, text, session)
@@ -287,5 +305,6 @@ async def route(phone: str, text: str, parsed: ParsedIntent) -> str:
         case Intent.CRYPTO_BUY:   return await _handle_crypto_buy(phone, parsed)
         case Intent.CRYPTO_WALLET: return await _handle_crypto_wallet(phone, parsed.currency)
         case Intent.PIN_SETUP:    return await _handle_pin_setup_start(phone)
+        case Intent.RECOVERY:     return await handle_recovery_start(phone)
         case Intent.CANCEL:       return "✅ No hay ninguna operación activa. ¿En qué te puedo ayudar?"
         case _:                   return _msg_unknown()

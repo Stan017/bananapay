@@ -42,6 +42,9 @@ class Intent(str, Enum):
     # Soporte
     SUPPORT = "support"
 
+    # Recuperación de cuenta
+    RECOVERY = "recovery"
+
     # Cancelación / escape universal
     CANCEL = "cancel"
 
@@ -194,6 +197,17 @@ def parse_intent(text: str) -> ParsedIntent:
     # ── Cancelación — escape universal desde cualquier estado ─────────────────
     if any(c == normalized or normalized.startswith(c) for c in CANCEL_WORDS):
         return ParsedIntent(intent=Intent.CANCEL)
+
+    # Recuperación de cuenta — antes que greeting para no interferir
+    if re.search(
+        r"recuper(ar?|é|o)\s*(cuenta|número|acceso|mi\s+cuenta)|"
+        r"perd[ií]\s*(mi\s*)?(número|cel(ular)?|teléfono|whatsapp)|"
+        r"cambi[eéoó]\s*(mi\s*)?número|nuevo\s+número|"
+        r"mi\s+nuevo\s+número|tengo\s+otro\s+número|"
+        r"cambi(ar?|é)\s*(de\s*)?(número|cel|whatsapp)",
+        normalized,
+    ):
+        return ParsedIntent(intent=Intent.RECOVERY)
 
     if _matches(GREETINGS):
         return ParsedIntent(intent=Intent.GREETING)

@@ -31,8 +31,13 @@ class ConversationState(str, Enum):
     AWAITING_CUSTODY_MODE = "awaiting_custody_mode"
     # Transferencias
     AWAITING_TRANSFER_AMOUNT = "awaiting_transfer_amount"
+    AWAITING_TRANSFER_RECIPIENT_CONFIRM = "awaiting_transfer_recipient_confirm"
     AWAITING_TRANSFER_PIN = "awaiting_transfer_pin"
     AWAITING_TRANSFER_CONFIRM = "awaiting_transfer_confirm"
+    # Recuperación de cuenta (número perdido)
+    AWAITING_RECOVERY_CEDULA     = "awaiting_recovery_cedula"
+    AWAITING_RECOVERY_BIRTHDATE  = "awaiting_recovery_birthdate"
+    AWAITING_RECOVERY_PIN        = "awaiting_recovery_pin"
     # Depósito
     AWAITING_DEPOSIT_AMOUNT  = "awaiting_deposit_amount"
     AWAITING_DEPOSIT_VOUCHER = "awaiting_deposit_voucher"
