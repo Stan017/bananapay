@@ -51,6 +51,7 @@ class ConversationState(str, Enum):
     AWAITING_WITHDRAW_BANK   = "awaiting_withdraw_bank"
     AWAITING_WITHDRAW_ACCOUNT_TYPE   = "awaiting_withdraw_account_type"
     AWAITING_WITHDRAW_ACCOUNT_NUMBER = "awaiting_withdraw_account_number"
+    AWAITING_WITHDRAW_ACCOUNT_NUMBER_CONFIRM = "awaiting_withdraw_account_number_confirm"
     AWAITING_WITHDRAW_ACCOUNT_HOLDER = "awaiting_withdraw_account_holder"
     AWAITING_WITHDRAW_PIN    = "awaiting_withdraw_pin"
     AWAITING_WITHDRAW_ACCOUNT = "awaiting_withdraw_account"

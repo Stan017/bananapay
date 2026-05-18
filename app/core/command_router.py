@@ -61,6 +61,7 @@ from app.core.routers.withdrawal import (
     _handle_withdraw_bank,
     _handle_withdraw_account_type,
     _handle_withdraw_account_number,
+    _handle_withdraw_account_number_confirm,
     _handle_withdraw_account_holder,
     _handle_withdraw_own_or_third,
     _handle_withdraw_recipient_cedula,
@@ -224,7 +225,8 @@ async def route(phone: str, text: str, parsed: ParsedIntent) -> str:
     if state == ConversationState.AWAITING_WITHDRAW_TYPE:             return await _handle_withdraw_type(phone, text, session)
     if state == ConversationState.AWAITING_WITHDRAW_BANK:             return await _handle_withdraw_bank(phone, text, session)
     if state == ConversationState.AWAITING_WITHDRAW_ACCOUNT_TYPE:     return await _handle_withdraw_account_type(phone, text, session)
-    if state == ConversationState.AWAITING_WITHDRAW_ACCOUNT_NUMBER:   return await _handle_withdraw_account_number(phone, text, session)
+    if state == ConversationState.AWAITING_WITHDRAW_ACCOUNT_NUMBER:         return await _handle_withdraw_account_number(phone, text, session)
+    if state == ConversationState.AWAITING_WITHDRAW_ACCOUNT_NUMBER_CONFIRM: return await _handle_withdraw_account_number_confirm(phone, text, session)
     if state == ConversationState.AWAITING_WITHDRAW_ACCOUNT_HOLDER:   return await _handle_withdraw_account_holder(phone, text, session)
     if state == ConversationState.AWAITING_WITHDRAW_OWN_OR_THIRD:     return await _handle_withdraw_own_or_third(phone, text, session)
     if state == ConversationState.AWAITING_WITHDRAW_RECIPIENT_CEDULA: return await _handle_withdraw_recipient_cedula(phone, text, session)

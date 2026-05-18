@@ -279,10 +279,45 @@ async def _handle_withdraw_account_number(phone: str, text: str, session: dict) 
         return "El número de cuenta debe tener al menos 10 dígitos. Intenta de nuevo:"
 
     await session_manager.set_state(
-        phone, ConversationState.AWAITING_WITHDRAW_ACCOUNT_HOLDER,
-        context={"withdraw_account_number": account_number},
+        phone, ConversationState.AWAITING_WITHDRAW_ACCOUNT_NUMBER_CONFIRM,
+        context={"withdraw_account_number_temp": account_number},
     )
-    return "¿A nombre de quién está la cuenta?\nEscribe el *nombre completo del titular*:"
+    return (
+        "🔄 *Confirma el número de cuenta:*\n\n"
+        "Escríbelo de nuevo para asegurarnos de que no haya errores:"
+    )
+
+
+async def _handle_withdraw_account_number_confirm(phone: str, text: str, session: dict) -> str:
+    account_number = text.strip().replace(" ", "")
+    ctx  = session.get("context", {})
+    temp = ctx.get("withdraw_account_number_temp", "")
+
+    if not account_number.isdigit() or len(account_number) < 10:
+        return "El número de cuenta debe tener al menos 10 dígitos. Intenta de nuevo:"
+
+    if account_number != temp:
+        await session_manager.set_state(
+            phone, ConversationState.AWAITING_WITHDRAW_ACCOUNT_NUMBER,
+            context={"withdraw_account_number_temp": ""},
+        )
+        return (
+            "❌ *Los números no coinciden.*\n\n"
+            "Vuelve a ingresar el número de cuenta bancaria:"
+        )
+
+    await session_manager.set_state(
+        phone, ConversationState.AWAITING_WITHDRAW_ACCOUNT_HOLDER,
+        context={
+            "withdraw_account_number": account_number,
+            "withdraw_account_number_temp": "",
+        },
+    )
+    return (
+        "✅ Número confirmado.\n\n"
+        "¿A nombre de quién está la cuenta?\n"
+        "Escribe el *nombre completo del titular*:"
+    )
 
 
 async def _handle_withdraw_account_holder(phone: str, text: str, session: dict) -> str:
