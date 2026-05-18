@@ -5,7 +5,3 @@ providers = ["python"]
 
 [phases.setup]
 aptPkgs = ["libzbar0", "libzbar-dev"]   # zbar para pyzbar — apt en imagen Ubuntu de Railway
-
-
-[start]
-cmd = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
