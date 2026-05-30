@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Política AML/KYC — BananaPay</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary-container":     "#facc15",
+            "primary":               "#735c00",
+            "surface":               "#fff8f0",
+            "background":            "#fff8f0",
+            "yellow-light":          "#fef9c3",
+            "yellow-dark":           "#b45309",
+            "surface-container-low": "#fcf3e1",
+            "outline-variant":       "#d1c6ab",
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { -webkit-font-smoothing: antialiased; font-family: 'Inter', system-ui, sans-serif; }
+    h2 { font-size: 22px; font-weight: 800; color: #1f1b11; margin-top: 40px; margin-bottom: 12px; letter-spacing: -0.5px; }
+    h3 { font-size: 17px; font-weight: 700; color: #1f1b11; margin-top: 24px; margin-bottom: 8px; }
+    p  { color: #374151; line-height: 1.75; margin-bottom: 14px; font-size: 15px; }
+    ul { color: #374151; line-height: 1.75; margin-bottom: 14px; padding-left: 24px; list-style: disc; font-size: 15px; }
+    ul li { margin-bottom: 6px; }
+    a  { color: #735c00; text-decoration: underline; }
+  </style>
+</head>
+<body class="bg-background text-on-background">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/40">
+    <div class="flex justify-between items-center max-w-[1120px] mx-auto px-6 py-4">
+      <a href="index.html" class="flex items-center gap-2.5 no-underline">
+        <img src="logo.png" alt="BananaPay" class="h-8 w-auto" />
+        <span class="text-[20px] font-black tracking-tighter text-black">BananaPay</span>
+      </a>
+      <a href="index.html" class="text-[14px] font-bold text-primary hover:underline">← Volver al inicio</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="bg-surface-container-low border-b border-outline-variant/30 py-14 px-6">
+    <div class="max-w-[760px] mx-auto">
+      <span class="bg-yellow-light text-yellow-dark border border-yellow-dark/30 px-4 py-1.5 rounded-full text-[13px] font-bold uppercase inline-block mb-5">Legal · Cumplimiento</span>
+      <h1 class="font-black tracking-tighter leading-tight mb-4" style="font-size:clamp(28px,4vw,48px);letter-spacing:-2px">
+        Política de Prevención de<br/>Lavado de Activos y<br/>Financiamiento del Terrorismo
+      </h1>
+      <p class="text-gray-500 text-[15px]">
+        AML/CFT · KYC · Última actualización: <strong>14 de mayo de 2026</strong> · Versión 1.0
+      </p>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="max-w-[760px] mx-auto px-6 py-16">
+
+    <p>
+      BananaPay reconoce la importancia crítica de prevenir que su plataforma sea utilizada para el lavado de activos (LA), el financiamiento del terrorismo (FT) o cualquier otra actividad ilícita. Esta política establece los procedimientos y controles implementados en cumplimiento de la normativa ecuatoriana vigente, en particular:
+    </p>
+    <ul>
+      <li><strong>Ley Orgánica de Prevención, Detección y Erradicación del Delito de Lavado de Activos y del Financiamiento de Delitos</strong> (Ley AML/CFT Ecuador)</li>
+      <li>Resoluciones de la <strong>UAFE</strong> (Unidad de Análisis Financiero y Económico)</li>
+      <li>Reglamentación de la <strong>Superintendencia de Bancos del Ecuador</strong></li>
+      <li>Recomendaciones del <strong>GAFI/FATF</strong> aplicables a entidades de pagos digitales</li>
+    </ul>
+
+    <h2>1. Compromiso institucional</h2>
+    <p>
+      BananaPay tiene tolerancia <strong>cero</strong> frente al lavado de activos y el financiamiento del terrorismo. Nos comprometemos a cooperar con las autoridades competentes, reportar operaciones inusuales y mantener los más altos estándares de debida diligencia con nuestros usuarios.
+    </p>
+
+    <h2>2. Conocimiento del cliente (KYC)</h2>
+    <h3>2.1 Identificación básica</h3>
+    <p>Todo usuario debe proporcionar y verificar la siguiente información antes de operar:</p>
+    <ul>
+      <li>Nombre completo (según cédula o pasaporte)</li>
+      <li>Número de cédula de ciudadanía ecuatoriana o pasaporte vigente</li>
+      <li>Número de teléfono celular activo en Ecuador</li>
+      <li>Fecha de nacimiento</li>
+    </ul>
+
+    <h3>2.2 Debida diligencia reforzada</h3>
+    <p>Se aplica debida diligencia adicional en los siguientes casos:</p>
+    <ul>
+      <li>Usuarios clasificados como <strong>Personas Expuestas Políticamente (PEP)</strong></li>
+      <li>Usuarios que alcancen montos acumulados superiores a los umbrales establecidos</li>
+      <li>Transacciones originadas desde jurisdicciones de alto riesgo</li>
+      <li>Patrones de transacción inusuales o inconsistentes con el perfil del usuario</li>
+      <li>Solicitudes de retiro a cuentas bancarias distintas a la registrada sin justificación</li>
+    </ul>
+
+    <h3>2.3 Personas Expuestas Políticamente (PEP)</h3>
+    <p>
+      BananaPay identifica y da seguimiento especial a PEPs, definidos como personas que desempeñan o han desempeñado funciones públicas prominentes, así como sus familiares directos y colaboradores cercanos. Los PEP están sujetos a aprobación manual y monitoreo reforzado.
+    </p>
+
+    <h2>3. Monitoreo de transacciones</h2>
+    <h3>3.1 Umbrales de reporte automático</h3>
+    <p>BananaPay reportará automáticamente a la UAFE las transacciones que superen:</p>
+    <ul>
+      <li>Operaciones individuales o acumuladas que superen los umbrales establecidos por la UAFE en las resoluciones vigentes</li>
+      <li>Transferencias que, independientemente del monto, presenten señales de alerta</li>
+    </ul>
+
+    <h3>3.2 Señales de alerta</h3>
+    <p>El sistema de BananaPay monitorea automáticamente las siguientes señales de alerta:</p>
+    <ul>
+      <li>Múltiples transacciones en corto tiempo que en conjunto superen los umbrales</li>
+      <li>Depósitos y retiros inmediatos sin uso del saldo ("paso de dinero")</li>
+      <li>Envíos a múltiples destinatarios desconocidos en lapsos cortos</li>
+      <li>Cambios súbitos en el patrón de uso de la cuenta</li>
+      <li>Intentos de acceso desde ubicaciones o dispositivos inusuales</li>
+      <li>Transacciones que no corresponden al perfil económico declarado del usuario</li>
+    </ul>
+
+    <h3>3.3 Reporte de Operaciones Inusuales e Injustificadas (ROII)</h3>
+    <p>
+      Cuando se detecte una operación inusual que no pueda ser justificada por el usuario, BananaPay presentará un Reporte de Operación Inusual e Injustificada (ROII) ante la UAFE en los plazos establecidos por la ley, con total reserva y confidencialidad.
+    </p>
+
+    <h2>4. Obligaciones del usuario</h2>
+    <p>Al utilizar BananaPay, el usuario se compromete a:</p>
+    <ul>
+      <li>Proporcionar información veraz y actualizada sobre su identidad y actividad económica.</li>
+      <li>Notificar cualquier cambio en su información personal relevante.</li>
+      <li>Utilizar la plataforma únicamente para transacciones lícitas y de fuentes lícitas.</li>
+      <li>No realizar operaciones por cuenta de terceros sin declararlo explícitamente.</li>
+      <li>Cooperar con las solicitudes de información adicional de BananaPay cuando sean requeridas por razones de cumplimiento.</li>
+    </ul>
+
+    <h2>5. Congelamiento y bloqueo de cuentas</h2>
+    <p>BananaPay se reserva el derecho de bloquear preventivamente una cuenta y los fondos asociados cuando:</p>
+    <ul>
+      <li>Exista una orden judicial o requerimiento de autoridad competente.</li>
+      <li>Se detecten señales graves de lavado de activos o fraude.</li>
+      <li>El usuario aparezca en listas de sanciones nacionales o internacionales (OFAC, ONU, etc.).</li>
+      <li>El usuario no complete o supere el proceso de debida diligencia.</li>
+    </ul>
+    <p>En casos de bloqueo, BananaPay notificará al usuario en la medida que la ley lo permita, y cooperará plenamente con las autoridades.</p>
+
+    <h2>6. Listas de sanciones y verificación</h2>
+    <p>
+      BananaPay verifica a sus usuarios contra las siguientes listas antes del registro y de forma periódica:
+    </p>
+    <ul>
+      <li>Lista de sanciones de la UAFE Ecuador</li>
+      <li>Listas OFAC (Office of Foreign Assets Control, EE.UU.)</li>
+      <li>Listas de sanciones del Consejo de Seguridad de la ONU</li>
+      <li>Listas de países y territorios de alto riesgo GAFI/FATF</li>
+    </ul>
+
+    <h2>7. Capacitación y cultura de cumplimiento</h2>
+    <p>
+      El equipo de BananaPay recibe capacitación periódica sobre prevención de lavado de activos, señales de alerta y procedimientos de reporte. Contamos con un Oficial de Cumplimiento designado responsable de la implementación de esta política.
+    </p>
+
+    <h2>8. Confidencialidad</h2>
+    <p>
+      Toda información relacionada con reportes de operaciones inusuales o sospechosas es estrictamente confidencial. Está prohibido informar al usuario investigado sobre la existencia de un reporte o investigación en su contra ("tipping off"), conforme a la ley ecuatoriana.
+    </p>
+
+    <h2>9. Conservación de registros</h2>
+    <p>
+      BananaPay conserva todos los registros de transacciones, documentos KYC y reportes de cumplimiento por un mínimo de <strong>7 años</strong>, en cumplimiento de la normativa ecuatoriana aplicable.
+    </p>
+
+    <h2>10. Contacto del Oficial de Cumplimiento</h2>
+    <p>
+      Para consultas relacionadas con cumplimiento AML/CFT:<br/>
+      📧 <a href="mailto:cumplimiento@bananapay.ec">cumplimiento@bananapay.ec</a><br/>
+      💬 <a href="https://wa.me/593989006527">WhatsApp: +593 98 900 6527</a>
+    </p>
+
+    <!-- Alert box -->
+    <div class="mt-10 p-6 bg-black text-white rounded-[1.5rem]">
+      <p class="font-black text-[15px] mb-2 text-primary-container">🔒 Reporte de actividad sospechosa</p>
+      <p class="text-gray-300 text-[14px] mb-0">
+        Si sospechas que una transacción en tu cuenta fue realizada sin tu consentimiento, o si detectas actividad que podría constituir lavado de activos, repórtalo inmediatamente a <a href="mailto:cumplimiento@bananapay.ec" class="text-primary-container">cumplimiento@bananapay.ec</a> o por WhatsApp. Actuaremos de inmediato.
+      </p>
+    </div>
+
+    <div class="mt-8 p-6 bg-yellow-light border border-yellow-dark/30 rounded-[1.5rem]">
+      <p class="text-yellow-dark font-bold text-[14px] mb-1">⚠️ Nota importante</p>
+      <p class="text-yellow-dark text-[14px] mb-0">
+        Este documento es un borrador generado como punto de partida. Debe ser revisado y validado por un abogado especializado en derecho financiero ecuatoriano y un oficial de cumplimiento certificado (CAMS o equivalente) antes de su implementación oficial.
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-black text-white py-10 px-6 mt-8">
+    <div class="max-w-[760px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-2">
+        <img src="logo.png" alt="BananaPay" class="h-6 w-auto" style="filter:brightness(0) invert(1)" />
+        <span class="text-[16px] font-black tracking-tighter" style="color:#ffe083">BananaPay</span>
+      </div>
+      <div class="flex gap-6 text-[13px] text-gray-400">
+        <a href="terminos.html"   class="hover:text-white transition-colors no-underline">Términos</a>
+        <a href="privacidad.html" class="hover:text-white transition-colors no-underline">Privacidad</a>
+        <a href="aml.html"        class="hover:text-white transition-colors no-underline text-white">Políticas AML</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
